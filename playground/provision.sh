@@ -68,4 +68,4 @@ if [ ! -f /root/btrfs_volume ]; then
   quick-setup
 fi
 
-echo "Groot to go. Enjoy your day."
+echo "I am groot"
