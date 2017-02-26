@@ -66,7 +66,8 @@ import (
 
 // Quota limit params - currently we only control blocks hard limit
 type Quota struct {
-	Size uint64
+	Size   uint64
+	BCount uint64
 }
 
 // Control - Context to be used by storage driver (e.g. overlay)
@@ -214,6 +215,7 @@ func (q *Control) GetQuota(targetPath string, quota *Quota) error {
 	var cs = C.CString(q.backingFsBlockDev)
 	defer C.free(unsafe.Pointer(cs))
 
+	syscall.Sync()
 	_, _, errno := syscall.Syscall6(syscall.SYS_QUOTACTL, C.Q_XGETPQUOTA,
 		uintptr(unsafe.Pointer(cs)), uintptr(C.__u32(projectID)),
 		uintptr(unsafe.Pointer(&d)), 0, 0)
@@ -221,7 +223,9 @@ func (q *Control) GetQuota(targetPath string, quota *Quota) error {
 		return fmt.Errorf("Failed to get quota limit for projid %d on %s: %v",
 			projectID, q.backingFsBlockDev, errno.Error())
 	}
+
 	quota.Size = uint64(d.d_blk_hardlimit) * 512
+	quota.BCount = uint64(d.d_bcount) * 512
 
 	return nil
 }

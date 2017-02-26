@@ -16,7 +16,6 @@ type Config struct {
 	DiskLimitSizeBytes        int64    `yaml:"disk_limit_size_bytes"`
 	DraxBin                   string   `yaml:"drax_bin"`
 	BtrfsBin                  string   `yaml:"btrfs_bin"`
-	XFSProgsPath              string   `yaml:"xfsprogs_path"`
 	NewuidmapBin              string   `yaml:"newuidmap_bin"`
 	NewgidmapBin              string   `yaml:"newgidmap_bin"`
 	ExcludeBaseImageFromQuota bool     `yaml:"exclude_base_image_from_quota"`
@@ -121,13 +120,6 @@ func (b *Builder) WithNewgidmapBin(newgidmapBin string, isSet bool) *Builder {
 func (b *Builder) WithBtrfsBin(btrfsBin string, isSet bool) *Builder {
 	if isSet || b.config.BtrfsBin == "" {
 		b.config.BtrfsBin = btrfsBin
-	}
-	return b
-}
-
-func (b *Builder) WithXFSProgsPath(xfsProgsPath string, isSet bool) *Builder {
-	if isSet {
-		b.config.XFSProgsPath = xfsProgsPath
 	}
 	return b
 }
