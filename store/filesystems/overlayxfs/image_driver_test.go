@@ -447,28 +447,13 @@ var _ = Describe("ImageDriver", func() {
 
 		Context("when the store path is not an XFS volume", func() {
 			It("returns an error", func() {
-				driver := overlayxfs.NewDriver("", "/tmp")
-				_, err := driver.FetchStats(logger, spec.ImagePath)
-				Expect(err).To(MatchError(ContainSubstring("cannot setup path for mount /tmp")))
-			})
-		})
-
-		Context("when using a custom xfsprogs bin path", func() {
-			It("will use binaries from that path", func() {
-				driver := overlayxfs.NewDriver(XFSProgsPath, StorePath)
-				imagePath := filepath.Join(StorePath, store.ImageDirName, fmt.Sprintf("random-id-%d", rand.Int()))
-				Expect(os.Mkdir(imagePath, 0755)).To(Succeed())
-				spec.ImagePath = imagePath
-
-				Expect(driver.CreateImage(logger, spec)).To(Succeed())
-
-				_, err := driver.FetchStats(logger, spec.ImagePath)
-				Expect(err).To(HaveOccurred())
-				Expect(err).To(MatchError(ContainSubstring("quota usage output not as expected")))
-
-				contents, err := ioutil.ReadFile(XFSQuotaCalledFile.Name())
+				tmpDir, err := ioutil.TempDir("", "")
 				Expect(err).NotTo(HaveOccurred())
-				Expect(string(contents)).To(Equal("I'm groot - xfs_quota"))
+				Expect(os.Mkdir(filepath.Join(tmpDir, "images"), 0755)).To(Succeed())
+
+				driver := overlayxfs.NewDriver("", tmpDir)
+				_, err = driver.FetchStats(logger, spec.ImagePath)
+				Expect(err).To(MatchError(ContainSubstring("Failed to get projid for")))
 			})
 		})
 	})
