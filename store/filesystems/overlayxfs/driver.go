@@ -57,16 +57,19 @@ func (d *Driver) InitFilesystem(logger lager.Logger, filesystemPath, storePath s
 	logger.Debug("starting")
 	defer logger.Debug("ending")
 
-	if err := d.mountFilesystem(filesystemPath, storePath, "remount"); err != nil {
-		if err := d.formatFilesystem(logger, filesystemPath); err != nil {
-			return err
-		}
+	os.MkdirAll("/var/vcap/data/grootfs/privileged", os.ModePerm)
+	os.MkdirAll("/var/vcap/data/grootfs/unprivileged", os.ModePerm)
 
-		if err := d.mountFilesystem(filesystemPath, storePath, ""); err != nil {
-			logger.Error("mounting-filesystem-failed", err, lager.Data{"filesystemPath": filesystemPath, "storePath": storePath})
-			return errorspkg.Wrap(err, "Mounting filesystem")
-		}
-	}
+	// if err := d.mountFilesystem(filesystemPath, storePath, "remount"); err != nil {
+	// 	if err := d.formatFilesystem(logger, filesystemPath); err != nil {
+	// 		return err
+	// 	}
+	//
+	// 	if err := d.mountFilesystem(filesystemPath, storePath, ""); err != nil {
+	// 		logger.Error("mounting-filesystem-failed", err, lager.Data{"filesystemPath": filesystemPath, "storePath": storePath})
+	// 		return errorspkg.Wrap(err, "Mounting filesystem")
+	// 	}
+	// }
 
 	return nil
 }
@@ -123,9 +126,9 @@ func (d *Driver) ValidateFileSystem(logger lager.Logger, path string) error {
 	logger.Debug("starting")
 	defer logger.Debug("ending")
 
-	if err := filesystems.CheckFSPath(path, "xfs", "noatime", "nobarrier", "prjquota"); err != nil {
-		return errorspkg.Wrap(err, "overlay-xfs filesystem validation")
-	}
+	// if err := filesystems.CheckFSPath(path, "xfs", "noatime", "nobarrier", "prjquota"); err != nil {
+	// 	return errorspkg.Wrap(err, "overlay-xfs filesystem validation")
+	// }
 
 	return nil
 }
@@ -385,11 +388,11 @@ func (d *Driver) formatFilesystem(logger lager.Logger, filesystemPath string) er
 }
 
 func (d *Driver) mountFilesystem(source, destination, option string) error {
-	allOpts := strings.Trim(fmt.Sprintf("%s,loop,pquota,noatime,nobarrier", option), ",")
-	cmd := exec.Command("mount", "-o", allOpts, "-t", "xfs", source, destination)
-	if output, err := cmd.CombinedOutput(); err != nil {
-		return errorspkg.Errorf("%s: %s", err, string(output))
-	}
+	// allOpts := strings.Trim(fmt.Sprintf("%s,loop,pquota,noatime,nobarrier", option), ",")
+	// cmd := exec.Command("mount", "-o", allOpts, "-t", "xfs", source, destination)
+	// if output, err := cmd.CombinedOutput(); err != nil {
+	// 	return errorspkg.Errorf("%s: %s", err, string(output))
+	// }
 
 	return nil
 }
