@@ -23,8 +23,14 @@ func init() {
 	transports.Register(Transport)
 }
 
-// Transport is an ImageTransport for OCI directories.
-var Transport = ociTransport{}
+var (
+	// Transport is an ImageTransport for OCI directories.
+	Transport = ociTransport{}
+
+	// ErrMoreThanOneImage is an error returned when the manifest includes
+	// more than one image and the user should choose which one to use.
+	ErrMoreThanOneImage = errors.New("more than one image in oci, choose an image")
+)
 
 type ociTransport struct{}
 
@@ -55,7 +61,9 @@ type ociReference struct {
 	// (But in general, we make no attempt to be completely safe against concurrent hostile filesystem modifications.)
 	dir         string // As specified by the user. May be relative, contain symlinks, etc.
 	resolvedDir string // Absolute path with no symlinks, at least at the time of its creation. Primarily used for policy namespaces.
-	image       string // If image=="", it means the only image in the index.json is used
+	// If image=="", it means the "only image" in the index.json is used in the case it is a source
+	// for destinations, the image name annotation "image.ref.name" is not added to the index.json
+	image string
 }
 
 // ParseReference converts a string, which should not start with the ImageTransport.Name prefix, into an OCI ImageReference.
@@ -182,7 +190,7 @@ func (ref ociReference) getManifestDescriptor() (imgspecv1.Descriptor, error) {
 			d = &index.Manifests[0]
 		} else {
 			// ask user to choose image when more than one image in the oci directory
-			return imgspecv1.Descriptor{}, errors.Wrapf(err, "more than one image in oci, choose an image")
+			return imgspecv1.Descriptor{}, ErrMoreThanOneImage
 		}
 	} else {
 		// if image specified, look through all manifests for a match

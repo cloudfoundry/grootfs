@@ -95,6 +95,13 @@ func (d *dockerImageDestination) MustMatchRuntimeOS() bool {
 	return false
 }
 
+// IgnoresEmbeddedDockerReference returns true iff the destination does not care about Image.EmbeddedDockerReferenceConflicts(),
+// and would prefer to receive an unmodified manifest instead of one modified for the destination.
+// Does not make a difference if Reference().DockerReference() is nil.
+func (d *dockerImageDestination) IgnoresEmbeddedDockerReference() bool {
+	return false // We do want the manifest updated; older registry versions refuse manifests if the embedded reference does not match.
+}
+
 // sizeCounter is an io.Writer which only counts the total size of its input.
 type sizeCounter struct{ size int64 }
 
@@ -123,7 +130,7 @@ func (d *dockerImageDestination) PutBlob(ctx context.Context, stream io.Reader, 
 	// FIXME? Chunked upload, progress reporting, etc.
 	uploadPath := fmt.Sprintf(blobUploadPath, reference.Path(d.ref.ref))
 	logrus.Debugf("Uploading %s", uploadPath)
-	res, err := d.c.makeRequest(ctx, "POST", uploadPath, nil, nil)
+	res, err := d.c.makeRequest(ctx, "POST", uploadPath, nil, nil, v2Auth)
 	if err != nil {
 		return types.BlobInfo{}, err
 	}
@@ -140,7 +147,7 @@ func (d *dockerImageDestination) PutBlob(ctx context.Context, stream io.Reader, 
 	digester := digest.Canonical.Digester()
 	sizeCounter := &sizeCounter{}
 	tee := io.TeeReader(stream, io.MultiWriter(digester.Hash(), sizeCounter))
-	res, err = d.c.makeRequestToResolvedURL(ctx, "PATCH", uploadLocation.String(), map[string][]string{"Content-Type": {"application/octet-stream"}}, tee, inputInfo.Size, true)
+	res, err = d.c.makeRequestToResolvedURL(ctx, "PATCH", uploadLocation.String(), map[string][]string{"Content-Type": {"application/octet-stream"}}, tee, inputInfo.Size, v2Auth)
 	if err != nil {
 		logrus.Debugf("Error uploading layer chunked, response %#v", res)
 		return types.BlobInfo{}, err
@@ -159,7 +166,7 @@ func (d *dockerImageDestination) PutBlob(ctx context.Context, stream io.Reader, 
 	// TODO: check inputInfo.Digest == computedDigest https://github.com/containers/image/pull/70#discussion_r77646717
 	locationQuery.Set("digest", computedDigest.String())
 	uploadLocation.RawQuery = locationQuery.Encode()
-	res, err = d.c.makeRequestToResolvedURL(ctx, "PUT", uploadLocation.String(), map[string][]string{"Content-Type": {"application/octet-stream"}}, nil, -1, true)
+	res, err = d.c.makeRequestToResolvedURL(ctx, "PUT", uploadLocation.String(), map[string][]string{"Content-Type": {"application/octet-stream"}}, nil, -1, v2Auth)
 	if err != nil {
 		return types.BlobInfo{}, err
 	}
@@ -184,7 +191,7 @@ func (d *dockerImageDestination) HasBlob(ctx context.Context, info types.BlobInf
 	checkPath := fmt.Sprintf(blobsPath, reference.Path(d.ref.ref), info.Digest.String())
 
 	logrus.Debugf("Checking %s", checkPath)
-	res, err := d.c.makeRequest(ctx, "HEAD", checkPath, nil, nil)
+	res, err := d.c.makeRequest(ctx, "HEAD", checkPath, nil, nil, v2Auth)
 	if err != nil {
 		return false, -1, err
 	}
@@ -200,7 +207,7 @@ func (d *dockerImageDestination) HasBlob(ctx context.Context, info types.BlobInf
 		logrus.Debugf("... not present")
 		return false, -1, nil
 	default:
-		return false, -1, errors.Errorf("failed to read from destination repository %s: %v", reference.Path(d.ref.ref), http.StatusText(res.StatusCode))
+		return false, -1, errors.Errorf("failed to read from destination repository %s: %d (%s)", reference.Path(d.ref.ref), res.StatusCode, http.StatusText(res.StatusCode))
 	}
 }
 
@@ -230,7 +237,7 @@ func (d *dockerImageDestination) PutManifest(ctx context.Context, m []byte) erro
 	if mimeType != "" {
 		headers["Content-Type"] = []string{mimeType}
 	}
-	res, err := d.c.makeRequest(ctx, "PUT", path, headers, bytes.NewReader(m))
+	res, err := d.c.makeRequest(ctx, "PUT", path, headers, bytes.NewReader(m), v2Auth)
 	if err != nil {
 		return err
 	}
@@ -435,7 +442,7 @@ sigExists:
 		}
 
 		path := fmt.Sprintf(extensionsSignaturePath, reference.Path(d.ref.ref), d.manifestDigest.String())
-		res, err := d.c.makeRequest(ctx, "PUT", path, nil, bytes.NewReader(body))
+		res, err := d.c.makeRequest(ctx, "PUT", path, nil, bytes.NewReader(body), v2Auth)
 		if err != nil {
 			return err
 		}

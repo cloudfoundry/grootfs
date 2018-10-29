@@ -9,27 +9,23 @@ import (
 	"path/filepath"
 	"runtime"
 
-	"github.com/pkg/errors"
-
 	"github.com/containers/image/manifest"
 	"github.com/containers/image/types"
-	"github.com/opencontainers/go-digest"
+	digest "github.com/opencontainers/go-digest"
 	imgspec "github.com/opencontainers/image-spec/specs-go"
 	imgspecv1 "github.com/opencontainers/image-spec/specs-go/v1"
+	"github.com/pkg/errors"
 )
 
 type ociImageDestination struct {
-	ref           ociReference
-	index         imgspecv1.Index
-	sharedBlobDir string
+	ref                      ociReference
+	index                    imgspecv1.Index
+	sharedBlobDir            string
+	acceptUncompressedLayers bool
 }
 
 // newImageDestination returns an ImageDestination for writing to an existing directory.
 func newImageDestination(sys *types.SystemContext, ref ociReference) (types.ImageDestination, error) {
-	if ref.image == "" {
-		return nil, errors.Errorf("cannot save image with empty image.ref.name")
-	}
-
 	var index *imgspecv1.Index
 	if indexExists(ref) {
 		var err error
@@ -48,6 +44,7 @@ func newImageDestination(sys *types.SystemContext, ref ociReference) (types.Imag
 	d := &ociImageDestination{ref: ref, index: *index}
 	if sys != nil {
 		d.sharedBlobDir = sys.OCISharedBlobDirPath
+		d.acceptUncompressedLayers = sys.OCIAcceptUncompressedLayers
 	}
 
 	if err := ensureDirectoryExists(d.ref.dir); err != nil {
@@ -86,6 +83,9 @@ func (d *ociImageDestination) SupportsSignatures(ctx context.Context) error {
 }
 
 func (d *ociImageDestination) DesiredLayerCompression() types.LayerCompression {
+	if d.acceptUncompressedLayers {
+		return types.PreserveOriginal
+	}
 	return types.Compress
 }
 
@@ -98,6 +98,13 @@ func (d *ociImageDestination) AcceptsForeignLayerURLs() bool {
 // MustMatchRuntimeOS returns true iff the destination can store only images targeted for the current runtime OS. False otherwise.
 func (d *ociImageDestination) MustMatchRuntimeOS() bool {
 	return false
+}
+
+// IgnoresEmbeddedDockerReference returns true iff the destination does not care about Image.EmbeddedDockerReferenceConflicts(),
+// and would prefer to receive an unmodified manifest instead of one modified for the destination.
+// Does not make a difference if Reference().DockerReference() is nil.
+func (d *ociImageDestination) IgnoresEmbeddedDockerReference() bool {
+	return false // N/A, DockerReference() returns nil.
 }
 
 // PutBlob writes contents of stream and returns data representing the result (with all data filled in).
@@ -218,13 +225,11 @@ func (d *ociImageDestination) PutManifest(ctx context.Context, m []byte) error {
 		return err
 	}
 
-	if d.ref.image == "" {
-		return errors.Errorf("cannot save image with empyt image.ref.name")
+	if d.ref.image != "" {
+		annotations := make(map[string]string)
+		annotations["org.opencontainers.image.ref.name"] = d.ref.image
+		desc.Annotations = annotations
 	}
-
-	annotations := make(map[string]string)
-	annotations["org.opencontainers.image.ref.name"] = d.ref.image
-	desc.Annotations = annotations
 	desc.Platform = &imgspecv1.Platform{
 		Architecture: runtime.GOARCH,
 		OS:           runtime.GOOS,
