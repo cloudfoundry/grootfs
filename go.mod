@@ -51,7 +51,7 @@ require (
 	github.com/urfave/cli v1.22.1
 	github.com/ventu-io/go-shortid v0.0.0-20160104014424-6c56cef5189c
 	golang.org/x/sys v0.0.0-20191029155521-f43be2a4598c
-	gopkg.in/yaml.v2 v2.2.4
+	gopkg.in/yaml.v2 v2.2.5
 	gotest.tools v2.2.0+incompatible // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
