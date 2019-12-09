@@ -12,6 +12,7 @@ import (
 	"path/filepath"
 	"strconv"
 	"strings"
+	"syscall"
 
 	"code.cloudfoundry.org/grootfs/base_image_puller"
 	"code.cloudfoundry.org/grootfs/groot"
@@ -430,8 +431,41 @@ func (d *Driver) mountFilesystem(source, destination, option string) error {
 	if output, err := cmd.CombinedOutput(); err != nil {
 		return errorspkg.Errorf("%s: %s", err, string(output))
 	}
+	loopPath, err := d.findAssociatedLoopDevice(source)
+	if err != nil {
+		return err
+	}
+
+	fd, err := os.Open(loopPath)
+	if err != nil {
+		return err
+	}
+	defer fd.Close()
+
+	const LOOP_SET_DIRECT_IO = uintptr(0x4C08)
+	_, _, errno := syscall.Syscall(syscall.SYS_IOCTL, uintptr(fd.Fd()), LOOP_SET_DIRECT_IO, uintptr(1))
+	if errno != 0 {
+		return fmt.Errorf("failed to set direct-io on loop device: errno %d, dev %q", errno, loopPath)
+	}
 
 	return nil
+}
+
+func (d *Driver) findAssociatedLoopDevice(filePath string) (string, error) {
+	errBuffer := bytes.NewBuffer([]byte{})
+	cmd := exec.Command("losetup", "-j", filePath)
+	cmd.Stderr = errBuffer
+	output, err := cmd.Output()
+	if err != nil {
+		return "", errorspkg.Wrapf(err, "finding attached loop device: %s", errBuffer.String())
+	}
+
+	losetupColumns := strings.Split(string(output), ":")
+	if len(losetupColumns) == 3 {
+		return losetupColumns[0], nil
+	}
+
+	return "", errorspkg.Errorf("unexpwcted losetup output: %s", string(output))
 }
 
 func (d *Driver) createImageDirectories(logger lager.Logger, directories map[string]string) error {
