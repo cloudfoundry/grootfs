@@ -150,7 +150,7 @@ var _ = Describe("Delete", func() {
 		})
 	})
 
-	Context("when it fails to unmount the rootfs directory", func() {
+	PContext("when it fails to unmount the rootfs directory", func() {
 		var mntPoint string
 
 		BeforeEach(func() {

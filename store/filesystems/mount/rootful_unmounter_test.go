@@ -65,7 +65,7 @@ var _ = Describe("Rootful Unmounter", func() {
 			Expect(string(mountTable)).NotTo(ContainSubstring(mountDestPath))
 		})
 
-		When("unmount fails", func() {
+		PWhen("unmount fails", func() {
 			var busyFile *os.File
 
 			BeforeEach(func() {
