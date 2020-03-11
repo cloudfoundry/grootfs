@@ -62,7 +62,7 @@ require (
 	github.com/syndtr/gocapability v0.0.0-20180916011248-d98352740cb2 // indirect
 	github.com/tchap/go-patricia v2.3.0+incompatible // indirect
 	github.com/tscolari/lagregator v0.0.0-20161103133944-b0fb43b01861
-	github.com/urfave/cli/v2 v2.1.1
+	github.com/urfave/cli/v2 v2.2.0
 	github.com/vbatts/tar-split v0.11.1 // indirect
 	github.com/ventu-io/go-shortid v0.0.0-20160104014424-6c56cef5189c
 	github.com/vishvananda/netlink v1.1.0 // indirect
