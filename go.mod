@@ -55,7 +55,7 @@ require (
 	github.com/prometheus/client_model v0.0.0-20171117100541-99fa1f4be8e5 // indirect
 	github.com/prometheus/common v0.0.0-20180518154759-7600349dcfe1 // indirect
 	github.com/seccomp/libseccomp-golang v0.9.1 // indirect
-	github.com/sirupsen/logrus v1.4.2
+	github.com/sirupsen/logrus v1.5.0
 	github.com/spf13/pflag v1.0.3 // indirect
 	github.com/st3v/glager v0.3.0
 	github.com/stretchr/testify v1.4.0 // indirect
