@@ -10,28 +10,31 @@ import (
 )
 
 type asyncCleaner struct {
-	logFile        string
-	logLevel       string
-	storePath      string
-	metronEndpoint string
-	tardisBin      string
-	newuidmapBin   string
-	newgidmapBin   string
+	logFile            string
+	logLevel           string
+	logTimestampFormat string
+	storePath          string
+	metronEndpoint     string
+	tardisBin          string
+	newuidmapBin       string
+	newgidmapBin       string
 }
 
 func YouAreCleaner(cfg config.Config) Cleaner {
 	return &asyncCleaner{
-		logFile:        cfg.Create.CleanLogFile,
-		logLevel:       cfg.LogLevel,
-		storePath:      cfg.StorePath,
-		metronEndpoint: cfg.MetronEndpoint,
-		tardisBin:      cfg.TardisBin,
-		newuidmapBin:   cfg.NewuidmapBin,
-		newgidmapBin:   cfg.NewgidmapBin,
+		logFile:            cfg.Create.CleanLogFile,
+		logLevel:           cfg.LogLevel,
+		storePath:          cfg.StorePath,
+		metronEndpoint:     cfg.MetronEndpoint,
+		tardisBin:          cfg.TardisBin,
+		newuidmapBin:       cfg.NewuidmapBin,
+		newgidmapBin:       cfg.NewgidmapBin,
+		logTimestampFormat: cfg.LogTimestampFormat,
 	}
 }
 
 func (c *asyncCleaner) Clean(logger lager.Logger, cleanThresholdBytes int64) (bool, error) {
+	logger.Info("XXXXXXXX cleaner", lager.Data{"cleaner": c})
 	cleanCommandArgs := []string{}
 	useLogFile := c.logFile != ""
 	if useLogFile {
@@ -39,6 +42,9 @@ func (c *asyncCleaner) Clean(logger lager.Logger, cleanThresholdBytes int64) (bo
 	}
 	if c.logLevel != "" {
 		cleanCommandArgs = append(cleanCommandArgs, "--log-level", c.logLevel)
+	}
+	if c.logTimestampFormat != "" {
+		cleanCommandArgs = append(cleanCommandArgs, "--log-timestamp-format", c.logTimestampFormat)
 	}
 	if c.storePath != "" {
 		cleanCommandArgs = append(cleanCommandArgs, "--store", c.storePath)
@@ -58,6 +64,7 @@ func (c *asyncCleaner) Clean(logger lager.Logger, cleanThresholdBytes int64) (bo
 
 	cleanCommandArgs = append(cleanCommandArgs, "clean", "--threshold-bytes", strconv.FormatInt(cleanThresholdBytes, 10))
 	cleanCommand := exec.Command(os.Args[0], cleanCommandArgs...)
+	logger.Info("XXXXXXXX clean command", lager.Data{"command": cleanCommand})
 	if !useLogFile {
 		cleanCommand.Stderr = os.Stderr
 	}
