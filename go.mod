@@ -13,7 +13,7 @@ require (
 	github.com/cloudfoundry/loggregatorlib v0.0.0-20170823162133-36eddf15ef12 // indirect
 	github.com/cloudfoundry/sonde-go v0.0.0-20171206171820-b33733203bb4
 	github.com/containers/image v1.5.1
-	github.com/containers/storage v1.23.0
+	github.com/containers/storage v1.23.4
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker v0.7.3-0.20190329212828-d7ab8ad145fa
