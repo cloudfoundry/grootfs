@@ -6,7 +6,6 @@ require (
 	code.cloudfoundry.org/commandrunner v0.0.0-20180212143422-501fd662150b
 	code.cloudfoundry.org/idmapper v0.0.0-00010101000000-000000000000
 	code.cloudfoundry.org/lager v0.0.0-20181119165122-baf208c4c56b
-	github.com/Microsoft/go-winio v0.4.15-0.20200908182639-5b44b70ab3ab // indirect
 	github.com/apoydence/eachers v0.0.0-20181020210610-23942921fe77 // indirect
 	github.com/beorn7/perks v0.0.0-20180321164747-3a771d992973 // indirect
 	github.com/cloudfoundry/dropsonde v1.0.0
@@ -15,7 +14,7 @@ require (
 	github.com/cloudfoundry/sonde-go v0.0.0-20171206171820-b33733203bb4
 	github.com/containerd/continuity v0.0.0-20200928162600-f2cc35102c2a // indirect
 	github.com/containers/image v1.5.1
-	github.com/containers/storage v1.23.0
+	github.com/containers/storage v1.24.3
 	github.com/cpuguy83/go-md2man/v2 v2.0.0 // indirect
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker v0.7.3-0.20190329212828-d7ab8ad145fa
