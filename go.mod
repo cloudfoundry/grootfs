@@ -48,7 +48,7 @@ require (
 	github.com/ventu-io/go-shortid v0.0.0-20160104014424-6c56cef5189c
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68
 	google.golang.org/protobuf v1.25.0 // indirect
-	gopkg.in/yaml.v2 v2.3.0
+	gopkg.in/yaml.v2 v2.4.0
 	gopkg.in/yaml.v3 v3.0.0-20200615113413-eeeca48fe776 // indirect
 	launchpad.net/gocheck v0.0.0-20140225173054-000000000087 // indirect
 )
