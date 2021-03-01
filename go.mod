@@ -15,7 +15,7 @@ require (
 	github.com/cloudfoundry/sonde-go v0.0.0-20171206171820-b33733203bb4
 	github.com/containerd/continuity v0.0.0-20200928162600-f2cc35102c2a // indirect
 	github.com/containers/image v1.5.1
-	github.com/containers/storage v1.25.0
+	github.com/containers/storage v1.27.0
 	github.com/docker/distribution v2.7.1+incompatible
 	github.com/docker/docker v0.7.3-0.20190329212828-d7ab8ad145fa
 	github.com/docker/docker-credential-helpers v0.6.0 // indirect
@@ -43,7 +43,7 @@ require (
 	github.com/prometheus/common v0.0.0-20180518154759-7600349dcfe1 // indirect
 	github.com/prometheus/procfs v0.0.5 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
-	github.com/sirupsen/logrus v1.7.0
+	github.com/sirupsen/logrus v1.8.0
 	github.com/st3v/glager v0.3.0
 	github.com/tscolari/lagregator v0.0.0-20161103133944-b0fb43b01861
 	github.com/urfave/cli/v2 v2.3.0
