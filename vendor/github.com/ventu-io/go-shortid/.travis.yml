@@ -1,7 +1,9 @@
 language: go
-
+arch:
+  - amd64
+  - ppc64le
 go:
-  - tip
+  - 1.8
 
 before_install:
   - go get
