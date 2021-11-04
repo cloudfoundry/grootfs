@@ -45,6 +45,29 @@ func (s *StoreMeasurer) UnusedVolumesSize(logger lager.Logger) (int64, error) {
 	return s.countVolumesSize(logger, unusedVols)
 }
 
+func (s *StoreMeasurer) UsedVolumesSize(logger lager.Logger) (int64, error) {
+
+	totalVolumesSize, err := s.TotalVolumesSize(logger)
+	if err != nil {
+
+		return 0, err
+	}
+
+	unusedVolumesSize, err := s.UnusedVolumesSize(logger)
+	if err != nil {
+		return 0, err
+	}
+
+	usedVolumesSize, err := totalVolumesSize - unusedVolumesSize
+	if err != nil {
+
+		return 0, err
+	}
+
+	return usedVolumesSize, nil
+}	
+
+
 func (s *StoreMeasurer) TotalVolumesSize(logger lager.Logger) (int64, error) {
 	vols, err := s.volumeDriver.Volumes(logger)
 	if err != nil {
