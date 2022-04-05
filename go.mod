@@ -11,10 +11,10 @@ require (
 	github.com/cloudfoundry/gosteno v0.0.0-20150423193413-0c8581caea35 // indirect
 	github.com/cloudfoundry/loggregatorlib v0.0.0-20170823162133-36eddf15ef12 // indirect
 	github.com/cloudfoundry/sonde-go v0.0.0-20200416163440-a42463ba266b
-	github.com/containers/image/v5 v5.20.0
-	github.com/containers/storage v1.38.2
-	github.com/docker/distribution v2.8.0+incompatible
-	github.com/docker/docker v20.10.12+incompatible
+	github.com/containers/image/v5 v5.21.0
+	github.com/containers/storage v1.38.3-0.20220301151551-d06b0f81c0aa
+	github.com/docker/distribution v2.8.1+incompatible
+	github.com/docker/docker v20.10.14+incompatible
 	github.com/docker/go-units v0.4.0
 	github.com/gorilla/mux v1.8.0 // indirect
 	github.com/hashicorp/errwrap v1.1.0 // indirect
@@ -28,8 +28,8 @@ require (
 	github.com/opencontainers/runc v1.1.0
 	github.com/opencontainers/runtime-spec v1.0.3-0.20210326190908-1c3f411f0417
 	github.com/pkg/errors v0.9.1
-	github.com/prometheus/common v0.29.0 // indirect
 	github.com/sirupsen/logrus v1.8.1
+	github.com/spf13/viper v1.10.0 // indirect
 	github.com/st3v/glager v0.3.0
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/tscolari/lagregator v0.0.0-20161103133944-b0fb43b01861
