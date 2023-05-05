@@ -23,7 +23,7 @@ require (
 	github.com/sirupsen/logrus v1.9.0
 	github.com/urfave/cli/v2 v2.25.3
 	github.com/ventu-io/go-shortid v0.0.0-20201117134242-e59966efd125
-	golang.org/x/sys v0.7.0
+	golang.org/x/sys v0.8.0
 	gopkg.in/yaml.v2 v2.4.0
 )
 
