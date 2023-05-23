@@ -1,31 +1,28 @@
 package dropsonde_unmarshaller
 
 import (
+	"log"
 	"sync"
 
-	"github.com/cloudfoundry/gosteno"
 	"github.com/cloudfoundry/sonde-go/events"
 )
 
 // A DropsondeUnmarshallerCollection is a collection of DropsondeUnmarshaller instances.
 type DropsondeUnmarshallerCollection struct {
 	unmarshallers []*DropsondeUnmarshaller
-	logger        *gosteno.Logger
 }
 
 // NewDropsondeUnmarshallerCollection instantiates a DropsondeUnmarshallerCollection,
-// creates the specified number of DropsondeUnmarshaller instances and logs to the
-// provided logger.
-func NewDropsondeUnmarshallerCollection(logger *gosteno.Logger, size int) *DropsondeUnmarshallerCollection {
+// creates the specified number of DropsondeUnmarshaller instances.
+func NewDropsondeUnmarshallerCollection(size int) *DropsondeUnmarshallerCollection {
 	var unmarshallers []*DropsondeUnmarshaller
 	for i := 0; i < size; i++ {
-		unmarshallers = append(unmarshallers, NewDropsondeUnmarshaller(logger))
+		unmarshallers = append(unmarshallers, NewDropsondeUnmarshaller())
 	}
 
-	logger.Debugf("dropsondeUnmarshallerCollection: created %v unmarshallers", size)
+	log.Printf("dropsondeUnmarshallerCollection: created %v unmarshallers", size)
 
 	return &DropsondeUnmarshallerCollection{
-		logger:        logger,
 		unmarshallers: unmarshallers,
 	}
 }

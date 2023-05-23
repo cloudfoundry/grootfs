@@ -5,7 +5,7 @@
 //
 // Instantiate a Marshaller and run it:
 //
-//		unmarshaller := dropsonde_unmarshaller.NewDropsondeUnMarshaller(logger)
+//		unmarshaller := dropsonde_unmarshaller.NewDropsondeUnMarshaller()
 //		inputChan :=  make(chan []byte) // or use a channel provided by some other source
 //		outputChan := make(chan *events.Envelope)
 //		go unmarshaller.Run(inputChan, outputChan)
@@ -20,11 +20,9 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/cloudfoundry/dropsonde/logging"
 	"github.com/cloudfoundry/dropsonde/metrics"
-	"github.com/cloudfoundry/gosteno"
 	"github.com/cloudfoundry/sonde-go/events"
-	"github.com/gogo/protobuf/proto"
+	"google.golang.org/protobuf/proto"
 )
 
 var metricNames map[events.Envelope_EventType]string
@@ -42,15 +40,11 @@ func init() {
 // A DropsondeUnmarshaller is an self-instrumenting tool for converting Protocol
 // Buffer-encoded dropsonde messages to Envelope instances.
 type DropsondeUnmarshaller struct {
-	logger *gosteno.Logger
 }
 
-// NewDropsondeUnmarshaller instantiates a DropsondeUnmarshaller and logs to the
-// provided logger.
-func NewDropsondeUnmarshaller(logger *gosteno.Logger) *DropsondeUnmarshaller {
-	return &DropsondeUnmarshaller{
-		logger: logger,
-	}
+// NewDropsondeUnmarshaller instantiates a DropsondeUnmarshaller.
+func NewDropsondeUnmarshaller() *DropsondeUnmarshaller {
+	return &DropsondeUnmarshaller{}
 }
 
 // Run reads byte slices from inputChan, unmarshalls them to Envelopes, and
@@ -70,13 +64,11 @@ func (u *DropsondeUnmarshaller) UnmarshallMessage(message []byte) (*events.Envel
 	envelope := &events.Envelope{}
 	err := proto.Unmarshal(message, envelope)
 	if err != nil {
-		logging.Debugf(u.logger, "dropsondeUnmarshaller: unmarshal error %v ", err)
 		metrics.BatchIncrementCounter("dropsondeUnmarshaller.unmarshalErrors")
 		return nil, err
 	}
 
 	if err := u.incrementReceiveCount(envelope.GetEventType()); err != nil {
-		logging.Debugf(u.logger, err.Error())
 		return nil, err
 	}
 
