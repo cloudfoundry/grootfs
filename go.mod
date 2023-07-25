@@ -11,7 +11,7 @@ require (
 	github.com/containers/image/v5 v5.26.1
 	github.com/containers/storage v1.48.0
 	github.com/docker/distribution v2.8.2+incompatible
-	github.com/docker/docker v24.0.4+incompatible
+	github.com/docker/docker v24.0.5+incompatible
 	github.com/docker/go-units v0.5.0
 	github.com/onsi/ginkgo/v2 v2.11.0
 	github.com/onsi/gomega v1.27.8
