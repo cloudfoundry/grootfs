@@ -765,7 +765,7 @@ func (d *Driver) applyDiskLimit(logger lager.Logger, spec image_manager.ImageDri
 		diskLimit -= volumeSize
 		if diskLimit < 0 {
 			err := errorspkg.New("disk limit is smaller than volume size")
-			logger.Error("applying-inclusive-quota-failed", err, lager.Data{"imagePath": spec.ImagePath})
+			logger.Error("applying-inclusive-quota-failed", err, lager.Data{"imagePath": spec.ImagePath, "diskLimit": diskLimit, "volumeSize": volumeSize})
 			return err
 		}
 	}
