@@ -167,13 +167,6 @@ func (b *Builder) WithLogFile(filepath string) *Builder {
 	return b
 }
 
-func (b *Builder) WithLogTimestampFormat(logTimestampFormat string) *Builder {
-	if logTimestampFormat != "" {
-		b.config.LogTimestampFormat = logTimestampFormat
-	}
-	return b
-}
-
 func (b *Builder) WithCleanLog(filepath string) *Builder {
 	if filepath != "" {
 		b.config.Create.CleanLogFile = filepath
