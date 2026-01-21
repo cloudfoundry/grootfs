@@ -444,7 +444,7 @@ func (d *Driver) formatFilesystem(logger lager.Logger, filesystemPath string) er
 }
 
 func (d *Driver) mountFilesystem(logger lager.Logger, source, destination, option string) error {
-	allOpts := strings.Trim(fmt.Sprintf("%s,loop,pquota,noatime", option), ",")
+	allOpts := strings.Trim(fmt.Sprintf("%s,pquota,noatime", option), ",")
 
 	cmd := exec.Command("mount", "-o", allOpts, "-t", "xfs", source, destination)
 	if output, err := cmd.CombinedOutput(); err != nil {
