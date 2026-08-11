@@ -3,9 +3,9 @@ module code.cloudfoundry.org/grootfs
 go 1.25.0
 
 require (
-	code.cloudfoundry.org/commandrunner v0.72.0
+	code.cloudfoundry.org/commandrunner v0.73.0
 	code.cloudfoundry.org/idmapper v0.0.0-20260722021010-9c84232f2761
-	code.cloudfoundry.org/lager/v3 v3.80.0
+	code.cloudfoundry.org/lager/v3 v3.82.0
 	github.com/cloudfoundry/dropsonde v1.1.0
 	github.com/cloudfoundry/sonde-go v0.0.0-20260720065356-6728909ed72b
 	github.com/containers/image/v5 v5.36.2
@@ -13,8 +13,8 @@ require (
 	github.com/docker/distribution v2.8.3+incompatible
 	github.com/docker/docker v28.5.2+incompatible
 	github.com/docker/go-units v0.5.0
-	github.com/klauspost/compress v1.19.1
-	github.com/onsi/ginkgo/v2 v2.32.0
+	github.com/klauspost/compress v1.19.2
+	github.com/onsi/ginkgo/v2 v2.32.1
 	github.com/onsi/gomega v1.42.1
 	github.com/opencontainers/go-digest v1.0.0
 	github.com/opencontainers/image-spec v1.1.1
@@ -24,7 +24,7 @@ require (
 	github.com/urfave/cli/v2 v2.27.7
 	github.com/ventu-io/go-shortid v0.0.0-20201117134242-e59966efd125
 	golang.org/x/sys v0.47.0
-	google.golang.org/protobuf v1.36.11
+	google.golang.org/protobuf v1.36.12
 	gopkg.in/yaml.v2 v2.4.0
 )
 
@@ -52,10 +52,10 @@ require (
 	github.com/teris-io/shortid v0.0.0-20201117134242-e59966efd125 // indirect
 	github.com/xrash/smetrics v0.0.0-20250705151800-55b8f293f342 // indirect
 	go.yaml.in/yaml/v3 v3.0.5 // indirect
-	golang.org/x/mod v0.38.0 // indirect
+	golang.org/x/mod v0.39.0 // indirect
 	golang.org/x/net v0.57.0 // indirect
 	golang.org/x/sync v0.22.0 // indirect
-	golang.org/x/text v0.40.0 // indirect
+	golang.org/x/text v0.41.0 // indirect
 	golang.org/x/tools v0.48.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20200227125254-8fa46927fb4f // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
