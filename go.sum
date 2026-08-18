@@ -14,8 +14,8 @@ github.com/cespare/xxhash/v2 v2.3.0 h1:UL815xU9SqsFlibzuggzjXhog7bL6oX9BbNZnL2UF
 github.com/cespare/xxhash/v2 v2.3.0/go.mod h1:VGX0DQ3Q6kWi7AoAeZDth3/j3BFtOZR5XLFGgcrjCOs=
 github.com/cloudfoundry/dropsonde v1.1.0 h1:nerhj8K0heOsv/U/Ddou5Esw56YlNeHHJH6MP9QlACQ=
 github.com/cloudfoundry/dropsonde v1.1.0/go.mod h1:OrkxsBrAvM8X0Ve9vaSNKLR+/Jeohu3+J0M4JEaTmnM=
-github.com/cloudfoundry/sonde-go v0.0.0-20260720065356-6728909ed72b h1:QoG349bugPqkb8XqPgZbf6VWyAuh3ONbTJ5aKazvbeQ=
-github.com/cloudfoundry/sonde-go v0.0.0-20260720065356-6728909ed72b/go.mod h1:rR3cyMIEfcaknKHjUDMf7Cuq5gn9Aiqvzz/gqsnsQBI=
+github.com/cloudfoundry/sonde-go v0.0.0-20260818080958-d46298cd8513 h1:iDbTfxfktGI+9k2rV7yAkLVyfV01yOecwK0gvK3fxNM=
+github.com/cloudfoundry/sonde-go v0.0.0-20260818080958-d46298cd8513/go.mod h1:XYqAovrP4BQjbhnbVqdbJMX50AD/et9sbJPtpQ1r4KU=
 github.com/containerd/errdefs v1.0.0 h1:tg5yIfIlQIrxYtu9ajqY42W3lpS19XqdxRQeEwYG8PI=
 github.com/containerd/errdefs v1.0.0/go.mod h1:+YBYIdtsnF4Iw6nWZhJcqGSg/dwvV7tyJ/kCkyJ2k+M=
 github.com/containerd/log v0.1.0 h1:TCJt7ioM2cr/tfR8GPbGf9/VRAX8D2B4PjzCpfX540I=
